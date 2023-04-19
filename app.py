@@ -9,6 +9,16 @@ from threading import Lock
 with open("vectorstore.pkl", "rb") as f:
     vectorstore = pickle.load(f)
 
+# api_key = "pk-lCLVmQtcGlTwJotXmAFwtPtAMxPHfKnSwmomOGsWlcbHTnoV"
+# api_base = "https://api.pawan.krd/v1"
+api_key = "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"
+api_base ="https://gptray.deno.dev/v1"
+
+import openai
+openai.api_key = api_key
+openai.api_base =api_base
+
+os.environ['OPENAI_API_BASE'] = api_base
 
 def set_openai_api_key(api_key: str):
     """Set the api key and return chain.
@@ -17,7 +27,8 @@ def set_openai_api_key(api_key: str):
     if api_key:
         os.environ["OPENAI_API_KEY"] = api_key
         chain = get_chain(vectorstore)
-        os.environ["OPENAI_API_KEY"] = ""
+        print(chain)
+        # os.environ["OPENAI_API_KEY"] = ""
         return chain
 
 class ChatWrapper:
@@ -38,6 +49,7 @@ class ChatWrapper:
             # Set OpenAI key
             import openai
             openai.api_key = api_key
+            openai.api_base =api_base
             # Run chain and append input.
             output = chain({"question": inp, "chat_history": history})["answer"]
             history.append((inp, output))
